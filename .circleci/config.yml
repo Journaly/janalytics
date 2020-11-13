@@ -23,7 +23,7 @@ jobs:
           command: jupyter nbconvert "Activity Report.ipynb" --to html --output /tmp/activity-report.html
           name: Generate HTML Report
       - store_artifacts:
-          path: /tmp/activity-report
+          path: /tmp/activity-report.html
 
 workflows:
   main:

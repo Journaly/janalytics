@@ -15,8 +15,8 @@ jobs:
           command: python -m jupyter nbconvert "Activity Report.ipynb" --to html --output activity-report.html
           name: Generate HTML Report
       - run:
-        command: cat activity-report.html
-        name: Test
+          command: cat activity-report.html
+          name: Test
 
 workflows:
   main:

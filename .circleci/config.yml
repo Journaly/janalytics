@@ -12,11 +12,10 @@ jobs:
       - python/install-deps
       - python/save-cache
       - run:
-          command: python -m jupyter nbconvert "Activity Report.ipynb" --to html --output activity-report.html
+          command: python -m jupyter nbconvert "Activity Report.ipynb" --to html --output /tmp/activity-report.html
           name: Generate HTML Report
-      - run:
-          command: cat activity-report.html
-          name: Test
+      - store_artifacts:
+          path: /tmp/activity-report
 
 workflows:
   main:

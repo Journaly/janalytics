@@ -25,6 +25,16 @@ jobs:
           path: /tmp/activity-report.html
 
 workflows:
+  version: 2
+
+  nightly:
+    triggers:
+      - schedule:
+          cron: "0 23 * * *"
+          filters:
+            branches:
+              only:
+                - master
   main:
     jobs:
       - generate-and-publish-report

@@ -17,8 +17,7 @@ jobs:
           # well, jupyter uses it internally
           key: 'pipb-{{ checksum "requirements.txt"  }}'
           paths:
-              - /home/circleci/.local/lib/
-              - /home/circleci/.local/bin/
+              - /home/circleci/.local/
       - run:
           command: jupyter nbconvert "Activity Report.ipynb" --to html --output /tmp/activity-report.html
           name: Generate HTML Report

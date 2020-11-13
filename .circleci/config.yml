@@ -19,7 +19,7 @@ jobs:
           paths:
               - /home/circleci/.local/
       - run:
-          command: jupyter nbconvert "Activity Report.ipynb" --to html --output /tmp/activity-report.html
+          command: jupyter nbconvert "Activity Report.ipynb" --execute --to html --output /tmp/activity-report.html
           name: Generate HTML Report
       - store_artifacts:
           path: /tmp/activity-report.html

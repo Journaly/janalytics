@@ -35,6 +35,9 @@ workflows:
             branches:
               only:
                 - master
+    jobs:
+      - generate-and-publish-report
+
   main:
     jobs:
       - generate-and-publish-report

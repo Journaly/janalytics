@@ -1,0 +1,43 @@
+version: 2.1
+
+orbs:
+  python: circleci/python@0.2.1
+
+jobs:
+  generate-and-publish-report:
+    executor: python/default
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - 'pip-v2-{{ checksum "requirements.txt"  }}'
+      - python/install-deps
+      - save_cache:
+          # Don't use python/(save|load)-cache because we need to cache bin as
+          # well, jupyter uses it internally
+          key: 'pip-v2-{{ checksum "requirements.txt"  }}'
+          paths:
+              - /home/circleci/.local/
+      - run:
+          command: jupyter nbconvert "Activity Report.ipynb" --execute --to html --output /tmp/activity-report.html
+          name: Generate HTML Report
+      - store_artifacts:
+          path: /tmp/activity-report.html
+
+workflows:
+  version: 2
+
+  nightly:
+    triggers:
+      - schedule:
+          cron: "0 23 * * *"
+          filters:
+            branches:
+              only:
+                - master
+    jobs:
+      - generate-and-publish-report
+
+  main:
+    jobs:
+      - generate-and-publish-report

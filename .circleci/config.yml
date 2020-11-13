@@ -10,12 +10,12 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - 'pipb-{{ checksum "requirements.txt"  }}'
+            - 'pip-v2-{{ checksum "requirements.txt"  }}'
       - python/install-deps
       - save_cache:
           # Don't use python/(save|load)-cache because we need to cache bin as
           # well, jupyter uses it internally
-          key: 'pipb-{{ checksum "requirements.txt"  }}'
+          key: 'pip-v2-{{ checksum "requirements.txt"  }}'
           paths:
               - /home/circleci/.local/
       - run:

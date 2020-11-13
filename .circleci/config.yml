@@ -1,0 +1,21 @@
+version: 2.1
+
+orbs:
+  python: circleci/python@0.2.1
+
+jobs:
+  generate-and-publish-report:
+    executor: python/default
+    steps:
+      - checkout
+      - python/load-cache
+      - python/install-deps
+      - python/save-cache
+      - run:
+          command: jupyter nbconvert "Activity Report.ipynb" --to html --output activity-report.html
+          name: Generate HTML Report
+
+workflows:
+  main:
+    jobs:
+      - generate-and-publish-report

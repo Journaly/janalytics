@@ -8,11 +8,19 @@ jobs:
     executor: python/default
     steps:
       - checkout
-      - python/load-cache
+      - restore_cache:
+          keys:
+            - 'pipb-{{ checksum "requirements.txt"  }}'
       - python/install-deps
-      - python/save-cache
+      - save_cache:
+          # Don't use python/(save|load)-cache because we need to cache bin as
+          # well, jupyter uses it internally
+          key: 'pipb-{{ checksum "requirements.txt"  }}'
+          paths:
+              - /home/circleci/.local/lib/
+              - /home/circleci/.local/bin/
       - run:
-          command: python -m jupyter nbconvert "Activity Report.ipynb" --to html --output /tmp/activity-report.html
+          command: jupyter nbconvert "Activity Report.ipynb" --to html --output /tmp/activity-report.html
           name: Generate HTML Report
       - store_artifacts:
           path: /tmp/activity-report

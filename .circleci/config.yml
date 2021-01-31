@@ -44,11 +44,18 @@ jobs:
             "/tmp/activity-report.html"
             "s3://janalytics-reports/$(cat /tmp/key)"
       - run:
+          name: Generate presigned URL
+          command: >
+            aws s3 presign
+            "s3://janalytics-reports/$(cat /tmp/key)"
+            --expires 604800
+            > /tmp/presigned-url
+      - run:
           name: Post to Slack
           command: >
             curl -X POST
             -H 'Content-type: application/json'
-            --data '{"text":"Hello, World!"}'
+            --data "{\"text\":\"Hey y'all, there's a new janalytics report here: $(cat /tmp/presigned-url)\"}"
             "$SLACK_WEBHOOK_URL"
 
 

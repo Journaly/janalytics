@@ -2,9 +2,10 @@ version: 2.1
 
 orbs:
   python: circleci/python@0.2.1
+  aws-cli: circleci/aws-cli@1.3.2
 
 jobs:
-  generate-and-publish-report:
+  generate-report:
     executor: python/default
     steps:
       - checkout
@@ -19,10 +20,26 @@ jobs:
           paths:
               - /home/circleci/.local/
       - run:
-          command: jupyter nbconvert "Activity Report.ipynb" --execute --to html --output /tmp/activity-report.html
           name: Generate HTML Report
-      - store_artifacts:
-          path: /tmp/activity-report.html
+          command: jupyter nbconvert "Activity Report.ipynb" --execute --to html --output /tmp/activity-report.html
+      - persist_to_workspace:
+          root: /tmp
+          paths:
+            - activity-report.html
+
+  upload-to-s3:
+    executor: aws-cli/default
+    steps:
+      - attach_workspace:
+          at: /tmp
+      - aws-cli/setup
+      - run:
+          name: Generate S3 Key
+          command: echo "activity/activity-report-$(date +'%Y-%m-%dT%H:%M:%S%z').html" > /tmp/key
+      - run:
+          name: Upload to S3
+          command: aws s3 cp --storage-class INTELLIGENT_TIERING "/tmp/activity-report.html s3://janalytics-reports/$(cat /tmp/key)"
+
 
 workflows:
   version: 2

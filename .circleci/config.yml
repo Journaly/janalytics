@@ -54,7 +54,13 @@ workflows:
                 - master
     jobs:
       - generate-and-publish-report
+      - upload-to-s3:
+          requires:
+            - generate-and-publish-report
 
   main:
     jobs:
       - generate-and-publish-report
+      - upload-to-s3:
+          requires:
+            - generate-and-publish-report

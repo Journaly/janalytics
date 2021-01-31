@@ -38,7 +38,18 @@ jobs:
           command: echo "activity/activity-report-$(date +'%Y-%m-%dT%H:%M:%S%z').html" > /tmp/key
       - run:
           name: Upload to S3
-          command: aws s3 cp --storage-class INTELLIGENT_TIERING "/tmp/activity-report.html" "s3://janalytics-reports/$(cat /tmp/key)"
+          command: >
+            aws s3 cp
+            --storage-class INTELLIGENT_TIERING
+            "/tmp/activity-report.html"
+            "s3://janalytics-reports/$(cat /tmp/key)"
+      - run:
+          name: Post to Slack
+          command: >
+            curl -X POST
+            -H 'Content-type: application/json'
+            --data '{"text":"Hello, World!"}'
+            "$SLACK_WEBHOOK_URL"
 
 
 workflows:

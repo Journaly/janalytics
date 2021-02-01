@@ -44,7 +44,7 @@ jobs:
             "/tmp/activity-report.html"
             "s3://janalytics-reports/$(cat /tmp/key)"
       - run:
-          name: Generate presigned URL
+          name: Generate Presigned URL
           command: >
             aws s3 presign
             "s3://janalytics-reports/$(cat /tmp/key)"
@@ -55,7 +55,7 @@ jobs:
           command: >
             curl -X POST
             -H 'Content-type: application/json'
-            --data "{\"text\":\"Hey y'all, there's a new janalytics report here: $(cat /tmp/presigned-url)\"}"
+            --data "{\"text\": \"A new Janalytics activity report has been published\", \"blocks\": [{\"type\": \"section\", \"text\": {\"type\": \"mrkdwn\", \"text\": \"A new Janalytics activity report has been published\"}, \"accessory\": {\"type\": \"button\", \"text\": {\"type\": \"plain_text\", \"text\": \"View\"}, \"value\": \"42\", \"url\": \"$(cat /tmp/presigned-url)\", \"action_id\": \"button-action\" }}]}"
             "$SLACK_WEBHOOK_URL"
 
 
